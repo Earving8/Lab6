@@ -11,12 +11,11 @@
 <body>
     <div class="container">
        <div id="app">
-         Message: {{ message }}
-            <ol>
-                <li v-for="todo in todos" :key="todo.text">
-                    {{ todo.text }}
-                </li>
-          </ol>
+           <ul>
+            <li v-for="stop in stops">
+              {{ stop.name }}
+            </li>
+           </ul>
        </div>
     </div>
     
@@ -32,15 +31,23 @@
     
     <!-- user scripts -->
     <script>
+        
+        fetch('https://utils.pauliankline.com/stops.json')
+            .then(function(response) {
+                return response.json();
+        })
+            .then(function(data){
+                data.forEach(function(bustop) {
+                    app.stops.push(bustop);
+                })
+        })
+        
         const app = new Vue({
           el: '#app',
           data: {
-            message: 'Hello Vue!',
-            todos: [
-                { text: 'Learn JavaScript' },
-                { text: 'Learn Vue' },
-                { text: 'Build something awesome' }
-            ]
+              stops: [
+                  
+              ]
           }
         })
     </script>
