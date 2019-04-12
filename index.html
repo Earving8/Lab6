@@ -14,13 +14,13 @@
            <div class="form-group mt-3">
             <label>Number of Stops to show: </label>
             <input class="form-control" v-model.number="numStops" type="number">
-            <small class="form-text text-muted">Will show the closest bustops to your location</small>
+            <small class="form-text text-muted">User Location: {{userLongitude}} , {{userLatitude}}</small>
           </div>
            
            <div v-for="stop in filteredStops" class="card shadow-sm text-white bg-dark mb-3" style="width: 40rem;">
               <div class="card-body">
                 <h5 class="card-title">{{stop.name}}</h5>
-                <p class="card-text">{{stop.description}}</p>
+                <p class="card-text">{{stop.description}}<br> Distance: {{stop.distance}} mi</p>
               </div>
             </div>
        </div>
@@ -39,10 +39,13 @@
     <!-- user scripts -->
     <script>
         
+        
         const app = new Vue({
           el: '#app',
           data: {
               numStops: 10,
+              userLatitude: 0,
+              userLongitude: 0,
               stops: [
                   
               ]
@@ -59,15 +62,33 @@
                                     app.stops.push(bustop);
                                 })
                         })
+                
+                        navigator.geolocation.watchPosition(function(position) {
+                            app.userLatitude = position.coords.latitude;
+                            app.userLongitude = position.coords.longitude;
+                            
+                            app.findDistance();
+                        });
             
             },
             computed: {
                 // a computed getter
                 filteredStops: function () {
                   // `this` points to the vm instance
-                  return this.stops.slice(0,this.numStops)
+                  return this.stops.sort((a, b) => (a.distance - b.distance)).slice(0,this.numStops)
                 }
-              }
+                
+              },
+            methods: {
+                findDistance: function(){
+                    app.stops.forEach(function(bustop){
+                        let latitudeDifference = Math.abs(app.userLatitude - bustop.lat);
+                        let longitudeDifference = Math.abs(app.userLongitude - bustop.lon);
+                        let distanceToStop = Math.sqrt( Math.pow( latitudeDifference , 2) + Math.pow( longitudeDifference , 2) );
+                        bustop.distance = (distanceToStop * 69).toFixed(2);
+                    })
+                }
+            }
         })
     </script>
 </body>
