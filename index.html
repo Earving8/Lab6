@@ -14,7 +14,7 @@
            <input v-model.number="numStops" type="number">
            {{ numStops }}
            <ul>
-            <li v-for="stop in stops">
+            <li v-for="stop in filteredStops">
               {{ stop.name }}
             </li>
            </ul>
@@ -55,7 +55,14 @@
                                 })
                         })
             
-            }
+            },
+            computed: {
+                // a computed getter
+                filteredStops: function () {
+                  // `this` points to the vm instance
+                  return this.stops.slice(0,this.numStops)
+                }
+              }
         })
     </script>
 </body>
