@@ -11,9 +11,13 @@
 <body>
     <div class="container">
        <div id="app">
-           <input v-model.number="numStops" type="number">
-           {{ numStops }}
-           <div v-for="stop in filteredStops" class="card text-white bg-dark mb-3" style="width: 40rem;">
+           <div class="form-group mt-3">
+            <label>Number of Stops to show: </label>
+            <input class="form-control" v-model.number="numStops" type="number">
+            <small class="form-text text-muted">Will show the closest bustops to your location</small>
+          </div>
+           
+           <div v-for="stop in filteredStops" class="card shadow-sm text-white bg-dark mb-3" style="width: 40rem;">
               <div class="card-body">
                 <h5 class="card-title">{{stop.name}}</h5>
                 <p class="card-text">{{stop.description}}</p>
